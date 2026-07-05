@@ -1,5 +1,6 @@
-streamlit==1.35.0
-google-cloud-bigquery==3.21.0
-google-cloud-aiplatform==1.53.0
-pandas==2.2.2
-db-dtypes
+streamlit
+pandas
+numpy
+plotly
+google-cloud-bigquery
+google-cloud-aiplatform
