@@ -113,7 +113,7 @@ st.markdown("""
             box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35) !important;
         }
         
-        /* White-label configurations to clear standard environment markers */
+        /* Clean white-label configurations to clear standard environment markers */
         #MainMenu {visibility: hidden;}
         footer {visibility: hidden;}
         header {visibility: hidden;}
@@ -191,7 +191,7 @@ app_mode = st.sidebar.radio(
 
 st.sidebar.markdown("<div style='height: 30px;'></div>", unsafe_allow_html=True)
 st.sidebar.markdown("<p style='font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #4b5563; margin-bottom: 10px;'>Session Maintenance</p>", unsafe_allow_html=True)
-if st.sidebar.button("🔐 Terminate Secure Session Flow", use_container_width=True):
+if st.sidebar.button("🔐 Terminate Secure Session Flow", width='stretch'):
     st.session_state["authenticated"] = False
     st.rerun()
 
@@ -252,7 +252,7 @@ elif app_mode == "📊 GPU Telemetry Analytics":
         plot_bgcolor="rgba(0,0,0,0)",
         font_family="Inter"
     )
-    st.plotly_chart(fig_telemetry, use_container_width=True)
+    st.plotly_chart(fig_telemetry, width='stretch')
 
 elif app_mode == "📈 2030 Strategic Forecasts":
     st.markdown("<h3 style='font-family: \"Plus Jakarta Sans\", sans-serif; font-weight: 600;'>📈 Environmental Minimization Horizons (2026 - 2030)</h3>", unsafe_allow_html=True)
@@ -274,17 +274,13 @@ elif app_mode == "📈 2030 Strategic Forecasts":
         plot_bgcolor="rgba(0,0,0,0)",
         font_family="Inter"
     )
-    st.plotly_chart(fig_forecast, use_container_width=True)
+    st.plotly_chart(fig_forecast, width='stretch')
 
-# =====================================================================
-# ⚙️ BRAND NEW COMPONENT: PREMIUM COGNITIVE CONFIGURATION (SETTINGS) PANEL
-# =====================================================================
 elif app_mode == "⚙️ Operational Settings Panel":
     st.markdown("<h3 style='font-family: \"Plus Jakarta Sans\", sans-serif; font-weight: 600;'>⚙️ Workspace Configuration Parameters</h3>", unsafe_allow_html=True)
     st.markdown("<p style='color: #9ca3af; font-size: 14px;'>Calibrate core algorithmic hyperparameters, model operational permissions, and hardware acceleration clusters dynamically.</p>", unsafe_allow_html=True)
     st.write("---")
     
-    # Visual grid column split for controls
     panel_col1, panel_col2 = st.columns(2)
     
     with panel_col1:
