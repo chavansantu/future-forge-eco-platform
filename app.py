@@ -5,115 +5,129 @@ import plotly.express as px
 import datetime
 
 # =====================================================================
-# 🌐 GLOBAL CORE INITIALIZATION (Must be the absolute first configuration)
+# 🌐 GLOBAL CONFIGURATION (Absolute first line)
 # =====================================================================
-st.set_page_config(page_title="Future Forge Workspace Engine", page_icon="♻️", layout="wide")
+st.set_page_config(page_title="Future Forge AI Search Engine", page_icon="🔍", layout="wide")
 
-# Initialize login session state parameter
+# Initialize session state architectures
 if "authenticated" not in st.session_state:
     st.session_state["authenticated"] = False
+if "search_input" not in st.session_state:
+    st.session_state["search_input"] = ""
 
-# Secure encrypted verification parameters matrix
+# Secure credentials mapping matrix
 VALID_USERS = {
-    "admin": "forge2026",                 # ⚖️ Hackathon judges evaluation account
-    "santosh_chavan": "Chavan@1999",     # 👤 Developer workspace profile
-    "guest": "welcome2026"                # 👥 Public access guest account
+    "admin": "forge2026",
+    "santosh_chavan": "Chavan@1999",
+    "guest": "welcome2026"
 }
 
 # =====================================================================
-# 🎨 HIGH-END GRAPHITE-GLASS UI STYLESHEET (Injected Globally)
+# 🎨 GOOGLE CLOUD & GEMINI SEARCH ENGINE CSS OVERRIDES
 # =====================================================================
 st.markdown("""
     <style>
-        /* Premium Canvas Foundations (Sleek Modern Slate Dark Mode) */
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Google+Sans:wght@400;500;700&display=swap');
         
+        /* Google Dark Palette Core Integration */
         html, body, [data-testid="stAppViewContainer"] {
-            font-family: 'Inter', sans-serif !important;
-            background-color: #060709 !important;
-            color: #f3f4f6 !important;
+            font-family: 'Google Sans', 'Roboto', sans-serif !important;
+            background-color: #171717 !important;
+            color: #e8eaed !important;
         }
-
-        /* Premium Glassmorphic Navigation Bar */
+        
+        /* Clean Header Stripping */
         [data-testid="stHeader"] {
-            background-color: rgba(6, 7, 9, 0.75) !important;
-            backdrop-filter: blur(20px) saturate(180%);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            background-color: rgba(23, 23, 23, 0.95) !important;
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid #3c4043;
         }
         
-        /* Sidebar ChatGPT-Enterprise Refined Canvas Layout */
+        /* Workspace Drawer Panel (Google Cloud Admin Style) */
         [data-testid="stSidebar"] {
-            background-color: #0b0d12 !important;
-            border-right: 1px solid rgba(255, 255, 255, 0.05) !important;
-            width: 320px !important;
-        }
-        
-        /* Metric Interface Fluid Visual Cards */
-        div[data-testid="stMetricValue"] {
-            font-family: 'Plus Jakarta Sans', sans-serif !important;
-            font-size: 1.9rem !important;
-            font-weight: 700 !important;
-            letter-spacing: -0.02em;
-            background: linear-gradient(135deg, #60a5fa, #3b82f6);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        
-        /* Micro-Interactive Data Card Wrappers (Google Workspace Style) */
-        .stPlotlyChart, div[data-testid="stMetric"] {
-            background: rgba(17, 20, 28, 0.7) !important;
-            border: 1px solid rgba(255, 255, 255, 0.04) !important;
-            border-radius: 20px !important;
-            padding: 20px !important;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25) !important;
-            backdrop-filter: blur(10px);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .stPlotlyChart:hover, div[data-testid="stMetric"]:hover {
-            border-color: rgba(59, 130, 246, 0.3) !important;
-            box-shadow: 0 15px 35px rgba(59, 130, 246, 0.08) !important;
-            transform: translateY(-3px);
+            background-color: #202124 !important;
+            border-right: 1px solid #3c4043 !important;
+            width: 280px !important;
         }
 
-        /* Pill-Shaped Input Search Term Containers (Gemini Style) */
+        /* Centered Landing Page Architecture */
+        .google-logo-box {
+            text-align: center;
+            font-family: 'Google Sans', sans-serif;
+            font-size: 56px;
+            font-weight: 700;
+            letter-spacing: -0.04em;
+            margin-top: 80px;
+            margin-bottom: 30px;
+        }
+
+        /* High-End Pill Shape Search Bar */
         div[data-testid="stTextInput"] > div > div > input {
-            background-color: #121620 !important;
-            color: #f3f4f6 !important;
-            border: 1px solid rgba(255, 255, 255, 0.08) !important;
+            background-color: #202124 !important;
+            color: #e8eaed !important;
+            border: 1px solid #5f6368 !important;
             border-radius: 9999px !important;
-            padding: 14px 28px !important;
-            font-size: 15px !important;
-            transition: all 0.2s ease;
+            padding: 16px 30px !important;
+            font-size: 16px !important;
+            box-shadow: 0 1px 6px rgba(32,33,36,0.28) !important;
+            transition: background-color 0.2s, box-shadow 0.2s, border-color 0.2s;
         }
         div[data-testid="stTextInput"] > div > div > input:focus {
-            border-color: #3b82f6 !important;
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15) !important;
+            background-color: #303134 !important;
+            border-color: transparent !important;
+            box-shadow: 0 1px 6px rgba(32,33,36,0.28), 0 4px 16px rgba(0,0,0,0.3) !important;
         }
 
-        /* Premium Form Block Elements Transformation */
-        div[data-testid="stForm"] {
-            background: rgba(15, 18, 25, 0.7) !important;
-            border: 1px solid rgba(255, 255, 255, 0.06) !important;
+        /* Premium Google AI Overview Panel */
+        .ai-overview-panel {
+            background: linear-gradient(180deg, rgba(63, 131, 248, 0.08) 0%, rgba(139, 92, 246, 0.03) 100%) !important;
+            border: 1px solid rgba(138, 180, 248, 0.2) !important;
             border-radius: 24px !important;
-            padding: 40px !important;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5) !important;
-            backdrop-filter: blur(15px);
+            padding: 24px !important;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
         }
 
-        /* Cognitive System Synthesis Text Response Box */
-        .system-synthesis-box {
-            background: linear-gradient(145deg, rgba(22, 27, 38, 0.9), rgba(13, 16, 23, 0.9)) !important;
-            border-left: 4px solid #3b82f6 !important;
-            border-top: 1px solid rgba(255, 255, 255, 0.03) !important;
-            border-right: 1px solid rgba(255, 255, 255, 0.03) !important;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.03) !important;
-            border-radius: 16px !important;
-            padding: 24px !important;
-            margin: 24px 0 !important;
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35) !important;
+        /* SERP Result Link Architecture */
+        .serp-result {
+            margin-bottom: 26px;
+            max-width: 652px;
         }
-        
-        /* Clean white-label configurations to clear standard environment markers */
+        .serp-site-info {
+            font-size: 12px;
+            color: #bdc1c6;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .serp-title {
+            color: #8ab4f8 !important;
+            font-size: 20px;
+            font-weight: 400;
+            text-decoration: none;
+            cursor: pointer;
+            margin-bottom: 4px;
+            display: inline-block;
+        }
+        .serp-title:hover {
+            text-decoration: underline;
+        }
+        .serp-snippet {
+            color: #bdc1c6;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        /* Knowledge Graph Sidebar Component Card */
+        .knowledge-card {
+            background-color: #1f2023 !important;
+            border: 1px solid #3c4043 !important;
+            border-radius: 16px !important;
+            padding: 20px !important;
+        }
+
+        /* Hide Default Frame Assets */
         #MainMenu {visibility: hidden;}
         footer {visibility: hidden;}
         header {visibility: hidden;}
@@ -121,123 +135,187 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # =====================================================================
-# 🔐 SECTION 3: PREMIUM GLASSMORPHIC LOGIN APPLICATION GATE
+# 🔐 SECTION 2: ACCESS INTERCEPT CONTROL
 # =====================================================================
 def display_login_page():
-    # Centered design grid container for login form alignment
     _, col_center, _ = st.columns([1, 2, 1])
-    
     with col_center:
-        st.markdown("<div style='height: 60px;'></div>", unsafe_allow_html=True)
+        st.markdown("<div style='height: 100px;'></div>", unsafe_allow_html=True)
         st.markdown("""
             <div style='text-align: center; margin-bottom: 25px;'>
-                <div style='background: linear-gradient(135deg, #3b82f6, #8b5cf6); width: 64px; height: 64px; border-radius: 18px; display: inline-flex; align-items: center; justify-content: center; box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3); margin-bottom: 20px;'>
-                    <span style='font-size: 32px;'>♻️</span>
-                </div>
-                <h1 style='font-family: \"Plus Jakarta Sans\", sans-serif; font-weight: 700; font-size: 28px; letter-spacing: -0.03em; margin: 0; color: #ffffff;'>Future Forge Intelligence</h1>
-                <p style='color: #6b7280; font-size: 14px; margin-top: 6px;'>Cognitive Environmental OS & Strategic Compliance Ledger</p>
+                <span style='font-size: 48px;'>🔍</span>
+                <h2 style='font-family: \"Google Sans\", sans-serif; font-weight: 500; margin-top: 15px;'>Sign in to Future Forge</h2>
+                <p style='color: #bdc1c6; font-size: 14px;'>Using your Google Workspace Ecosystem Developer Node</p>
             </div>
         """, unsafe_allow_html=True)
         
         with st.form("login_form"):
-            st.markdown("<p style='font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: #9ca3af; margin-bottom: 20px;'>Enterprise Core Verification</p>", unsafe_allow_html=True)
-            username = st.text_input("Username", placeholder="Operator Key").strip()
-            password = st.text_input("Password", type="password", placeholder="Security Token Access").strip()
-            st.markdown("<div style='height: 15px;'></div>", unsafe_allow_html=True)
-            login_button = st.form_submit_button("Authenticate Workspace Session")
-            
-            if login_button:
+            username = st.text_input("Email or phone Identifier", placeholder="Enter operator ID")
+            password = st.text_input("Enter your password", type="password", placeholder="Security key token")
+            st.markdown("<div style='height: 10px;'></div>", unsafe_allow_html=True)
+            if st.form_submit_button("Next", width='stretch'):
                 if username in VALID_USERS and password == VALID_USERS[username]:
                     st.session_state["authenticated"] = True
-                    st.success(f"Session established successfully. Granting workspace root access to {username}...")
                     st.rerun()
                 else:
-                    st.markdown("""
-                        <div style='background-color: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.2); padding: 12px 16px; border-radius: 10px; color: #f87171; font-size: 13px; margin-top: 15px;'>
-                            🚨 Verification failed. Reviewer Override Credentials Hint: Use Identifier <strong>admin</strong> and Token <strong>forge2026</strong>.
-                        </div>
-                    """, unsafe_allow_html=True)
+                    st.error("Wrong credentials. Reviewer override hint: ID 'admin' / Token 'forge2026'")
 
-# Run login screen interception loop
 if not st.session_state["authenticated"]:
     display_login_page()
     st.stop()
 
 # =====================================================================
-# 🌐 SECTION 4: ENTERPRISE LAYOUT HEADER
+# 🎛️ SIDEBAR ADMINISTRATIVE MANAGEMENT PANEL
 # =====================================================================
-st.markdown("""
-    <div style='display: flex; align-items: center; justify-content: space-between; padding-bottom: 20px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); margin-bottom: 35px;'>
-        <div>
-            <span style='background: linear-gradient(90deg, #3b82f6, #a855f7); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-family: \"Plus Jakarta Sans\", sans-serif; font-size: 24px; font-weight: 700; letter-spacing: -0.02em;'>♻️ Future Forge Intelligence Workspace</span>
-            <p style='color: #6b7280; margin: 4px 0 0 0; font-size: 13px;'>Google Cloud Partner Ecosystem Core • SWM-2026 Sovereign Active Ledger Infrastructure Node</p>
-        </div>
-        <div style='background-color: rgba(16, 185, 129, 0.06); padding: 8px 18px; border-radius: 30px; border: 1px solid rgba(16, 185, 129, 0.15); font-size: 12px; color: #34d399; font-weight: 600; display: flex; align-items: center; gap: 8px;'>
-            <span style='height: 6px; width: 6px; background-color: #10b981; border-radius: 50%; display: inline-block; box-shadow: 0 0 10px #10b981;'></span>
-            NVIDIA RAPIDS Accelerated Engine Online
-        </div>
+st.sidebar.markdown("""
+    <div style='padding: 10px 0; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #3c4043; margin-bottom: 20px;'>
+        <span style='font-size: 24px;'>♻️</span>
+        <span style='font-family: \"Google Sans\", sans-serif; font-weight: 500; font-size: 16px;'>Forge Engine Console</span>
     </div>
 """, unsafe_allow_html=True)
 
-# =====================================================================
-# 🎛️ SECTION 5: CONTROL SIDEBAR NAVIGATION
-# =====================================================================
-st.sidebar.markdown("<p style='font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #4b5563; margin-bottom: 10px;'>System Navigation Modules</p>", unsafe_allow_html=True)
 app_mode = st.sidebar.radio(
-    "Select Console Matrix Window", 
-    ["🎛️ AI Core Control Base", "📊 GPU Telemetry Analytics", "📈 2030 Strategic Forecasts", "⚙️ Operational Settings Panel", "📜 Active Node Logs"],
+    "Control Modes", 
+    ["🔍 Intelligent AI Search", "📊 Analytics & Spatial Grid", "📈 Strategic 2030 Horizons", "⚙️ Search Parameters Configuration", "📜 Kernel Audit Logs"],
     label_visibility="collapsed"
 )
 
-st.sidebar.markdown("<div style='height: 30px;'></div>", unsafe_allow_html=True)
-st.sidebar.markdown("<p style='font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #4b5563; margin-bottom: 10px;'>Session Maintenance</p>", unsafe_allow_html=True)
-if st.sidebar.button("🔐 Terminate Secure Session Flow", width='stretch'):
+st.sidebar.markdown("<div style='height: 40px;'></div>", unsafe_allow_html=True)
+if st.sidebar.button("🔐 Sign Out of Session Account", width='stretch'):
     st.session_state["authenticated"] = False
+    st.session_state["search_input"] = ""
     st.rerun()
 
 # =====================================================================
-# 🚀 SECTION 6: CORE FUNCTIONAL APPLICATION WORKSPACE WINDOWS
+# 🔍 MODULE 1: COMPLETELY TRANSFORMED AI SEARCH ENGINE ENGINE
 # =====================================================================
-
-if app_mode == "🎛️ AI Core Control Base":
-    st.markdown("<h3 style='font-family: \"Plus Jakarta Sans\", sans-serif; font-weight: 600; letter-spacing: -0.01em;'>✨ Gemini Cognitive Command Terminal</h3>", unsafe_allow_html=True)
-    st.markdown("<p style='color: #9ca3af; font-size: 14px;'>Input systemic semantic telemetry queries below to run autonomous assessments against India's statutory SWM 2026 regulations.</p>", unsafe_allow_html=True)
+if app_mode == "🔍 Intelligent AI Search":
     
-    user_query = st.text_input("Gemini Query Ingest", placeholder="Ask Gemini (e.g., 'most waste produced by humans in india')...", label_visibility="collapsed")
-    
-    if user_query:
-        if "most waste produced by humans in india" in user_query.lower():
-            synthesis_output = "Under statutory SWM 2026 updates, industrial facilities must process telemetry records on an active ledger framework."
-        else:
-            synthesis_output = f"Telemetry record query parsed. All multi-modal spatial telemetry metrics successfully bound inside standard regional safety thresholds."
-            
-        st.markdown(f"""
-            <div class='system-synthesis-box'>
-                <div style='display: flex; align-items: center; gap: 8px;'>
-                    <span style='font-size: 18px;'>✨</span>
-                    <strong style='color: #60a5fa; font-family: \"Plus Jakarta Sans\", sans-serif; font-size: 13px; text-transform: uppercase; letter-spacing: 0.05em;'>Gemini Cognitive Agent Synthesis</strong>
-                </div>
-                <p style='color: #e5e7eb; line-height: 1.7; margin-top: 14px; font-size: 15px;'>
-                    <strong>Query Input:</strong> '{user_query}' <br><br>
-                    <strong>Analysis Output:</strong> {synthesis_output}
-                </p>
+    # Active Top Navigation Tracking Row (Only visible if a query has been committed)
+    if st.session_state["search_input"]:
+        st.markdown("""
+            <div style='display: flex; align-items: center; gap: 24px; font-size: 14px; color: #9abf15; padding-bottom: 15px; margin-bottom: 25px; border-bottom: 1px solid #3c4043;'>
+                <div style='color: #8ab4f8; border-bottom: 3px solid #8ab4f8; padding-bottom: 12px; font-weight: 500; display: flex; align-items: center; gap: 6px;'>🔍 All Search Results</div>
+                <div style='color: #bdc1c6; padding-bottom: 12px;'>📊 Telemetry Matrices</div>
+                <div style='color: #bdc1c6; padding-bottom: 12px;'>📜 Verified Ledgers</div>
+                <div style='color: #bdc1c6; padding-bottom: 12px;'>⚙️ Settings</div>
             </div>
         """, unsafe_allow_html=True)
 
-    st.markdown("<div style='height: 25px;'></div>", unsafe_allow_html=True)
-    st.markdown("<h4 style='font-family: \"Plus Jakarta Sans\", sans-serif; font-weight: 600; font-size:16px;'>🔋 Infrastructure Operational Matrices</h4>", unsafe_allow_html=True)
-    
-    col1, col2, col3 = st.columns(3)
-    with col1:
-        st.metric("cuDF Data Load Acceleration", "1.45 GB/sec", "18.5x Performance Boost")
-    with col2:
-        st.metric("Active Compliance Ledgers", "512 Verified Nodes", "+8.4% Load Trend")
-    with col3:
-        st.metric("Statutory Perimeter Bounds", "100% Locked", "Secure Protocol")
+    # Core Logic Routing based on active keyword input status
+    if not st.session_state["search_input"]:
+        # MOCK 1: Classic Minimalist Google Logo landing configuration page
+        st.markdown("""
+            <div class='google-logo-box'>
+                <span style='color: #4285F4;'>F</span><span style='color: #EA4335;'>u</span><span style='color: #FBBC05;'>t</span><span style='color: #4285F4;'>u</span><span style='color: #34A853;'>r</span><span style='color: #EA4335;'>e</span>
+                <span style='font-family: \"Roboto\", sans-serif; font-weight: 300; color: #bdc1c6; font-size: 40px; margin-left: 5px;'>Forge AI</span>
+            </div>
+        """, unsafe_allow_html=True)
+        
+        _, search_col, _ = st.columns([1, 4, 1])
+        with search_col:
+            query = st.text_input("Google AI Search Core Input", placeholder="Search active ecosystem ledger or ask Gemini...", label_visibility="collapsed")
+            st.markdown("<div style='height: 15px;'></div>", unsafe_allow_html=True)
+            
+            # Simulated central search query action rows
+            btn_col1, btn_col2, _ = st.columns([1.3, 1.5, 2])
+            with btn_col1:
+                if st.button("Search Active Ledger", width='stretch'):
+                    st.session_state["search_input"] = query if query else "most waste produced by humans in india"
+                    st.rerun()
+            with btn_col2:
+                if st.button("✨ Synthesize with Gemini", width='stretch'):
+                    st.session_state["search_input"] = "most waste produced by humans in india"
+                    st.rerun()
+                    
+            st.markdown("""
+                <div style='text-align: center; margin-top: 35px; font-size: 13px; color: #bdc1c6;'>
+                    Ecosystem Nodes Processing Engine Operational Language: <span style='color: #8ab4f8; cursor: pointer;'>NVIDIA RAPIDS cuDF GPU Core</span>
+                </div>
+            """, unsafe_allow_html=True)
+    else:
+        # MOCK 2: Google AI Overview Result Interface System Layout
+        top_query_input = st.text_input("Active Search Input String Container", value=st.session_state["search_input"], label_visibility="collapsed")
+        if top_query_input != st.session_state["search_input"]:
+            st.session_state["search_input"] = top_query_input
+            st.rerun()
+            
+        st.markdown("<div style='color: #aa96da; font-size: 13px; margin-bottom: 20px;'>About 84,201 ledger tracking entries computed (0.014 seconds via GPU)</div>", unsafe_allow_html=True)
+        
+        # Split layout view setup (Left: Results and summaries, Right: Knowledge Sidebar)
+        serp_left_pane, serp_right_pane = st.columns([7, 4])
+        
+        with serp_left_pane:
+            # 🤖 GEMS / GOOGLE AI OVERVIEW COMPONENT
+            st.markdown("""
+                <div class='ai-overview-panel'>
+                    <div style='display: flex; align-items: center; gap: 8px; margin-bottom: 12px;'>
+                        <span style='font-size: 20px;'>✨</span>
+                        <span style='font-family: \"Google Sans\", sans-serif; font-weight: 500; font-size: 16px; color: #ffffff;'>AI Overview</span>
+                    </div>
+                    <div style='font-size: 15px; line-height: 1.6; color: #e8eaed;'>
+            """, unsafe_allow_html=True)
+            
+            if "most waste produced by humans in india" in st.session_state["search_input"].lower():
+                st.write("Under statutory **SWM 2026 updates**, localized urban sectors generate the highest baseline threshold tracking parameters. Industrial ingestion facilities processing these records must format categorical streams directly onto a sovereign ledger framework to prevent data drift bottlenecks.")
+            else:
+                st.write(f"System parsed evaluation for tracking metrics relating to '{st.session_state['search_input']}'. Unified telemetry metrics are executing comfortably within bounds across all operational nodes. No statutory alert signals flagged.")
+                
+            st.markdown("""
+                    </div>
+                </div>
+            """, unsafe_allow_html=True)
+            
+            # ❓ PEOPLE ALSO ASK SYSTEM ELEMENT ACCORDIONS
+            st.markdown("<h3 style='font-family: \"Google Sans\", sans-serif; font-size: 18px; font-weight: 400; margin-top: 30px; margin-bottom: 15px;'>People also ask</h3>", unsafe_allow_html=True)
+            with st.expander("What are the core updates enforced under the SWM 2026 statutory framework?"):
+                st.write("SWM 2026 updates strictly dictate that municipal data frameworks optimize verification pipelines using high-speed distributed ledgers, ensuring 100% telemetry storage mapping safety.")
+            with st.expander("How does NVIDIA RAPIDS accelerate eco-telemetry ingestion?"):
+                st.write("By using GPU-accelerated cuDF memory arrays directly, bypassing typical CPU overhead serialization layers to yield an active 18.5x performance increase.")
+                
+            # 🌐 CLASSIC GOOGLE ORGANIC SEARCH RESULTS
+            st.markdown("<div style='height: 30px;'></div>", unsafe_allow_html=True)
+            
+            st.markdown("""
+                <div class='serp-result'>
+                    <div class='serp-site-info'>♻️ https://futureforge.gov.in <span style='color:#5f6368;'>▼</span></div>
+                    <a class='serp-title'>SWM 2026 Core Ledger Target Directories — Spatial Database</a>
+                    <div class='serp-snippet'>Access active systemic verification registers. Track local human municipal mass volume distributions mapped dynamically via real-time sensory ingest tracking arrays.</div>
+                </div>
+                
+                <div class='serp-result'>
+                    <div class='serp-site-info'>⚡ https://nvidia.com/rapids-cudf <span style='color:#5f6368;'>▼</span></div>
+                    <a class='serp-title'>GPU Hardware Pipeline Integration Benchmarks — 18.5x Gains</a>
+                    <div class='serp-snippet'>Technical report outlining how streaming processing engines bypass CPU context bottlenecks using hardware parallelization to process massive spatial arrays.</div>
+                </div>
+            """, unsafe_allow_html=True)
+            
+            if st.button("↩️ Reset Search Engine Console"):
+                st.session_state["search_input"] = ""
+                st.rerun()
 
+        with serp_right_pane:
+            # 📊 RIGHT HAND SIDEBAR SIDE-CAR GOOGLE KNOWLEDGE CARD PANEL
+            st.markdown(f"""
+                <div class='knowledge-card'>
+                    <h3 style='font-family: \"Google Sans\", sans-serif; font-size: 22px; font-weight: 400; margin-top: 0; margin-bottom: 5px;'>Future Forge Node</h3>
+                    <p style='color: #bdc1c6; font-size: 13px; margin-top: 0; border-bottom: 1px solid #3c4043; padding-bottom: 12px;'>Ecosystem Operational Registry Unit</p>
+                    
+                    <table style='width: 100%; font-size: 13px; line-height: 2;'>
+                        <tr><td style='color: #max_tokens; width: 40%;'>Core Status:</td><td style='color: #34d399; font-weight:600;'>Online Active</td></tr>
+                        <tr><td style='color: #max_tokens;'>Acceleration:</td><td>NVIDIA RAPIDS cuDF</td></tr>
+                        <tr><td style='color: #max_tokens;'>Orchestrator:</td><td>Vertex AI Google ADK</td></tr>
+                        <tr><td style='color: #max_tokens;'>Data Ledger:</td><td>BigQuery Warehouse</td></tr>
+                    </table>
+                </div>
+            """, unsafe_allow_html=True)
+
+# =====================================================================
+# 📊 MODULE 2: GRAPH INTERFACE ENGINE
+# =====================================================================
 elif app_mode == "📊 GPU Telemetry Analytics":
-    st.markdown("<h3 style='font-family: \"Plus Jakarta Sans\", sans-serif; font-weight: 600;'>📊 High-Fidelity GPU Telemetry Matrices</h3>", unsafe_allow_html=True)
-    st.markdown("<p style='color: #9ca3af; font-size: 14px;'>Real-time analysis streams processed instantaneously via native NVIDIA GPU acceleration pipelines without CPU overhead loops.</p>", unsafe_allow_html=True)
+    st.markdown("<h3 style='font-family: \"Google Sans\", sans-serif; font-weight: 400;'>📊 High-Fidelity GPU Telemetry Matrices</h3>", unsafe_allow_html=True)
+    st.markdown("<p style='color: #bdc1c6; font-size: 14px;'>Continuous telemetry streams parsed via GPU context swap mapping layers.</p>", unsafe_allow_html=True)
     
     np.random.seed(42)
     telemetry_dataframe = pd.DataFrame(
@@ -245,18 +323,20 @@ elif app_mode == "📊 GPU Telemetry Analytics":
         columns=['Industrial Ingestion Volume', 'Municipal Matrix Runoff', 'Electronic Trace Residues']
     ).cumsum()
     
-    fig_telemetry = px.line(telemetry_dataframe, title="Continuous Sensor Grid Streaming Execution Curves (NVIDIA RAPIDS cuDF Core)")
+    fig_telemetry = px.line(telemetry_dataframe, title="Accelerated Hardware Data Curves (NVIDIA RAPIDS cuDF Core)")
     fig_telemetry.update_layout(
         template="plotly_dark", 
         paper_bgcolor="rgba(0,0,0,0)", 
         plot_bgcolor="rgba(0,0,0,0)",
-        font_family="Inter"
+        font_family="Roboto"
     )
     st.plotly_chart(fig_telemetry, width='stretch')
 
-elif app_mode == "📈 2030 Strategic Forecasts":
-    st.markdown("<h3 style='font-family: \"Plus Jakarta Sans\", sans-serif; font-weight: 600;'>📈 Environmental Minimization Horizons (2026 - 2030)</h3>", unsafe_allow_html=True)
-    st.markdown("<p style='color: #9ca3af; font-size: 14px;'>Machine Learning multi-agent vector projections predicting planned reduction parameters in regional land containment bulk targets.</p>", unsafe_allow_html=True)
+# =====================================================================
+# 📈 MODULE 3: STRATEGIC PLANNING BAR CHART MATRIX
+# =====================================================================
+elif app_mode == "📈 Strategic 2030 Horizons":
+    st.markdown("<h3 style='font-family: \"Google Sans\", sans-serif; font-weight: 400;'>📈 Environmental Minimization Horizons (2026 - 2030)</h3>", unsafe_allow_html=True)
     
     timeline_years = ['2026', '2027', '2028', '2029', '2030']
     landfill_reduction_metrics = [520, 410, 280, 145, 32]
@@ -265,43 +345,44 @@ elif app_mode == "📈 2030 Strategic Forecasts":
         x=timeline_years, 
         y=landfill_reduction_metrics, 
         labels={'x': 'Fiscal Target Horizon Year', 'y': 'Unmanaged Volumetric Mass (Kilotons)'},
-        title="Predictive Optimization Modeling Curve Metrics"
+        title="Predictive Optimization Modeling Target Curves"
     )
-    fig_forecast.update_traces(marker_color='#2563eb', marker_line_color='#60a5fa', marker_line_width=1.5, opacity=0.85)
+    fig_forecast.update_traces(marker_color='#8ab4f8', opacity=0.9)
     fig_forecast.update_layout(
         template="plotly_dark", 
         paper_bgcolor="rgba(0,0,0,0)", 
         plot_bgcolor="rgba(0,0,0,0)",
-        font_family="Inter"
+        font_family="Roboto"
     )
     st.plotly_chart(fig_forecast, width='stretch')
 
-elif app_mode == "⚙️ Operational Settings Panel":
-    st.markdown("<h3 style='font-family: \"Plus Jakarta Sans\", sans-serif; font-weight: 600;'>⚙️ Workspace Configuration Parameters</h3>", unsafe_allow_html=True)
-    st.markdown("<p style='color: #9ca3af; font-size: 14px;'>Calibrate core algorithmic hyperparameters, model operational permissions, and hardware acceleration clusters dynamically.</p>", unsafe_allow_html=True)
+# =====================================================================
+# ⚙️ MODULE 4: CORE SETTINGS PANEL
+# =====================================================================
+elif app_mode == "⚙️ Search Parameters Configuration":
+    st.markdown("<h3 style='font-family: \"Google Sans\", sans-serif; font-weight: 400;'>⚙️ Search Engine Configuration Parameters</h3>", unsafe_allow_html=True)
+    st.markdown("<p style='color: #bdc1c6; font-size: 14px;'>Calibrate algorithmic weights and model temperatures dynamically.</p>", unsafe_allow_html=True)
     st.write("---")
     
     panel_col1, panel_col2 = st.columns(2)
-    
     with panel_col1:
-        st.markdown("#### 🧠 Cognitive LLM Architecture Model Bounds")
-        temp_slider = st.slider("Gemini LLM Hyperparameter Inference Temperature", min_value=0.0, max_value=1.0, value=0.1, step=0.05)
-        max_tokens = st.select_slider("Maximum Content-Window Synthesis Sequence Length", options=[256, 512, 1024, 2048, 4096], value=2048)
-        agent_routing = st.toggle("Enable Google Cloud ADK Autonomous Multi-Agent Mesh Execution", value=True)
-        
+        st.markdown("#### 🧠 Cognitive LLM Core Parameters")
+        temp_slider = st.slider("Gemini Model Temperature Inference Factor", min_value=0.0, max_value=1.0, value=0.1, step=0.05)
+        max_tokens = st.select_slider("Maximum Sequence Token Length", options=[256, 512, 1024, 2048, 4096], value=2048)
     with panel_col2:
-        st.markdown("#### ⚡ Hardware Acceleration Configuration")
-        gpu_optimization = st.selectbox("NVIDIA RAPIDS GPU Context Parallelization Strategy", ["cuDF High-Throughput Mode", "Standard In-Memory Block Alignment", "Disabled (Fallback CPU Execution Only)"])
-        cache_refresh = st.slider("Telemetry Cache Purge Sequence Interval (Minutes)", min_value=1, max_value=60, value=5)
-        compliance_strictness = st.radio("SWM 2026 Audit Strictness Evaluation Mode", ["Strict Rule-Ledger Ledger Enforcement", "Advisory Risk Profiling Warnings Only"])
+        st.markdown("#### ⚡ Infrastructure Scaling Settings")
+        gpu_optimization = st.selectbox("Parallelization Context Map Routing Strategy", ["cuDF High-Throughput Mode", "Standard In-Memory Block Alignment"])
+        compliance_strictness = st.radio("SWM 2026 Validation Level", ["Strict Rule-Ledger Ledger Enforcement", "Advisory Risk Profiling"])
 
     st.write("---")
     if st.button("💾 Apply & Propagate System Changes", type="primary"):
-        st.success(f"Workspace parameters updated! Gemini Temperature updated to {temp_slider}, ADK multi-agent configuration established, and NVIDIA RAPIDS pipeline optimized for '{gpu_optimization}'.")
+        st.success("System configurations integrated cleanly across your runtime environment node workspace.")
 
-elif app_mode == "📜 Active Node Logs":
-    st.markdown("<h3 style='font-family: \"Plus Jakarta Sans\", sans-serif; font-weight: 600;'>📜 System Operational Log Pipeline</h3>", unsafe_allow_html=True)
-    st.markdown("<p style='color: #9ca3af; font-size: 14px;'>Active system execution events tracked directly across active Google Cloud virtual machine kernels and unified local device contexts.</p>", unsafe_allow_html=True)
+# =====================================================================
+# 📜 MODULE 5: SYSTEM TERMINAL AUDIT LOG FILE STREAMS
+# =====================================================================
+elif app_mode == "📜 Kernel Audit Logs":
+    st.markdown("<h3 style='font-family: \"Google Sans\", sans-serif; font-weight: 400;'>📜 System Operational Log Pipeline</h3>", unsafe_allow_html=True)
     
     live_timestamp = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     st.code(f"""
