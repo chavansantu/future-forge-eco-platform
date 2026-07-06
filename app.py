@@ -1,4 +1,50 @@
 import streamlit as st
+# LINE 1: Your existing import statement
+import streamlit as st
+
+# 1. Initialize login session state variable
+if "authenticated" not in st.session_state:
+    st.session_state["authenticated"] = False
+
+# 2. Define the dictionary of allowed users (Add your details here!)
+# 2. Define the dictionary of allowed users
+VALID_USERS = {
+    "admin": "forge2026",                 # ⚖️ Hackathon judges account
+    "santosh_chavan": "Chavan@1999",     # 👤 Your personalized credential profile
+    "guest": "welcome2026"                # 👥 Public guest access account
+}
+
+def display_login_page():
+    st.set_page_config(page_title="Future Forge Eco Platform - Login", page_icon="🔐", layout="centered")
+    st.markdown("<h2 style='text-align: center;'>♻️ Future Forge Eco Platform</h2>", unsafe_allow_html=True)
+    st.markdown("<h4 style='text-align: center; color: gray;'>ESG Compliance & Telemetry Hub</h4>", unsafe_allow_html=True)
+    st.write("---")
+    
+    with st.form("login_form"):
+        st.subheader("Sign In")
+        username = st.text_input("Username", placeholder="Enter your operator ID").strip()
+        password = st.text_input("Password", type="password", placeholder="Enter password").strip()
+        login_button = st.form_submit_button("Authenticate System")
+        
+        if login_button:
+            # Check if username exists in dictionary and password matches
+            if username in VALID_USERS and password == VALID_USERS[username]:
+                st.session_state["authenticated"] = True
+                st.success(f"Access Granted! Welcome back, {username}.")
+                st.rerun()
+            else:
+                st.error("Invalid credentials. (Hint: Use 'admin'/'forge2026' or 'guest'/'welcome2026' to access the system.)")
+
+# 3. Application Routing Gate
+if not st.session_state["authenticated"]:
+    display_login_page()
+    st.stop()
+
+# Add a clean logout button to your sidebar for logged-in sessions
+st.sidebar.markdown("---")
+if st.sidebar.button("🔐 Log Out"):
+    st.session_state["authenticated"] = False
+    st.rerun()
 import pandas as pd
 import numpy as np
 import plotly.express as px
