@@ -67,7 +67,7 @@ def load_esg_analytics_data():
     np.random.seed(42)
     regions = ["APAC-North", "APAC-South", "EMEA-West", "AMER-East", "AMER-West"]
     data = {
-        "Timestamp": pd.date_range(start="2026-01-01", periods=1000, freq="H"),
+        "Timestamp": pd.date_range(start="2026-01-01", periods=1000, freq="h"),
         "Region": np.random.choice(regions, 1000),
         "Carbon_Emissions_MT": np.random.uniform(10, 85, 1000),
         "Waste_Diversion_Rate": np.random.uniform(0.4, 0.92, 1000),
