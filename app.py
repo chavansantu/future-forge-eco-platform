@@ -164,7 +164,7 @@ if app_mode == "🎛️ AI Core Control Base":
     st.subheader("✨ Gemini Cognitive Command Terminal")
     st.write("Input structural prompts below to run autonomous assessments against India's statutory SWM 2026 regulatory ledgers.")
     
-    user_query = st.text_input("", placeholder="Ask Gemini (e.g., 'most waste produced by humans in india')...")
+    user_query = st.text_input("Gemini Query Ingest", placeholder="Ask Gemini (e.g., 'most waste produced by humans in india')...", label_visibility="collapsed")
     
     if user_query:
         # Match against our hackathon verified evaluation string
