@@ -65,5 +65,6 @@ def load_data():
 df = load_data()
 st.write("### Real-time Municipal Anomaly Monitor")
 st.bar_chart(df.set_index('location_id')['waste_density'])
+st.bar_chart(df.set_index('location_id')['waste_density'])
 
 st.caption("Data Source: Compiled Global Municipal Solid Waste Statistics (2026).")
