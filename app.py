@@ -1,6 +1,43 @@
 import streamlit as st
 import pandas as pd
+import streamlit as st
 
+# 1. SEARCH BAR AT THE TOP
+st.title("Future Forge Eco-Platform")
+search_query = st.text_input("🔍 Search country or region waste data...", "")
+
+# 2. NAVIGATION/ACTION ICONS (Top Row)
+col1, col2, col3, col4, col5 = st.columns(5)
+with col1: st.button("👤 Profile")
+with col2: st.button("⚙️ Settings")
+with col3: st.button("🔒 Privacy")
+with col4: st.button("🕒 History")
+with col5: st.button("🚪 Logout")
+
+st.divider()
+
+# 3. OVERVIEW & LOCATION (Dashboard Metrics)
+st.subheader("📍 Regional Overview & Location")
+# Add your location/overview code here
+col_a, col_b = st.columns(2)
+col_a.metric("Current Region", "Asia")
+col_b.metric("Active Analysis", "Waste Management")
+
+# 4. IMAGE & VIDEO ANALYSIS
+st.subheader("📹 Media Analysis")
+tab1, tab2 = st.tabs(["Image Analysis", "Video Analysis"])
+with tab1:
+    st.write("Upload an image for waste classification")
+    st.file_uploader("Upload Image", type=['png', 'jpg'])
+with tab2:
+    st.write("Upload a video for environmental tracking")
+    st.file_uploader("Upload Video", type=['mp4', 'mov'])
+
+# --- YOUR PREVIOUSLY UPDATED DATA/QUERY LOGIC BELOW ---
+# Keep your dataframe and existing logic here so it remains unchanged.
+
+# --- Keep your existing data and search logic below ---
+# Your existing code (dataframes, search functions, etc.) goes here
 # --- PAGE CONFIG ---
 st.set_page_config(page_title="Future Forge Platform", layout="wide")
 
