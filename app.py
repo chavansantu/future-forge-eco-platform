@@ -1,6 +1,35 @@
 import streamlit as st
 import pandas as pd
+import streamlit as st
+from datetime import datetime
 
+# Initialize Session State for Login and History
+if 'logged_in' not in st.session_state:
+    st.session_state.logged_in = False
+if 'history' not in st.session_state:
+    st.session_state.history = []
+
+# --- Login Logic ---
+if not st.session_state.logged_in:
+    st.title("Login to Future Forge")
+    user = st.text_input("Username")
+    pwd = st.text_input("Password", type="password")
+    if st.button("Login"):
+        if user and pwd:  # Add your authentication logic here
+            st.session_state.logged_in = True
+            st.rerun()
+    st.stop() # Stops the script if not logged in
+
+# --- Dashboard Layout (Only visible if logged_in is True) ---
+st.sidebar.button("Logout", on_click=lambda: st.session_state.update(logged_in=False))
+st.sidebar.subheader("Search History")
+for item in st.session_state.history:
+    st.sidebar.text(item)
+
+# Your existing Search Bar logic
+query = st.text_input("Search waste data...")
+if query:
+    st.session_state.history.append(f"{datetime.now().strftime('%H:%M')} - {query}")
 # --- PAGE CONFIG ---
 st.set_page_config(page_title="Future Forge: Decision Intelligence", layout="wide")
 
@@ -37,7 +66,30 @@ st.title("🌍 Future Forge: AI-Powered Waste Intelligence")
 
 # --- SEARCH BAR (Integrated Asia logic) ---
 search_input = st.text_input("🔍 Search Platform...", placeholder="e.g., 'India', 'Asia'")
+# ... existing imports and layout code ...
 
+# 1. SEARCH BAR AT THE TOP
+search_query = st.text_input("🔍 Search country or region waste data...", "")
+
+# --- INSERT NEW CODE HERE ---
+def get_waste_metrics(query):
+    # Base data for India
+    daily_waste = 165000 
+    hourly_waste = daily_waste / 24
+    
+    # You can customize this if the query is a specific region
+    return daily_waste, hourly_waste
+
+if search_query:
+    d, h = get_waste_metrics(search_query)
+    col1, col2 = st.columns(2)
+    col1.metric("Waste per Day", f"{d:,.0f} Tonnes")
+    col2.metric("Waste per Hour", f"{h:,.0f} Tonnes")
+# --- END OF INSERTION ---
+
+# 2. OVERVIEW & LOCATION (Your previously added code)
+st.subheader("📍 Regional Overview & Location")
+# ... (rest of your existing code follows here)
 if search_input:
     query = search_input.lower().strip()
     found = False
